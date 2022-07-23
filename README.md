@@ -10,7 +10,7 @@ npm i styled-components
 
 **css가 적용된 element를 마치 component처럼 쓸 수 있게 해주는 아주 고마운 친구**
 
-```js
+```jsx
 import styled from "styled-components";
 
 const Father = styled.div`
@@ -54,3 +54,31 @@ export default App;
 ```
 
 이외에도 Theme, keyframes(animation) 등의 매우 유용한 기능들이 있습니다. 스타일 관리에 아주 강력한 툴인듯!
+
+### TypeScript에서 Component에 Prop 보내기
+
+```tsx
+import styled from "styled-components";
+
+interface ContainerProps {
+  bgColor: string;
+}
+
+const Container = styled.div<ContainerProps>`
+  width: 200px;
+  height: 200px;
+  background-color: ${(props) => props.bgColor};
+`;
+
+interface CircleProps {
+  bgColor: string;
+}
+
+const Circle = ({ bgColor }: CircleProps) => {
+  return <Container bgColor={bgColor} />;
+};
+
+export default Circle;
+```
+
+즉, 제너릭을 이용해서 `ContainerProps`라는 객체 타입의 prop이 넘어올것이라고 알려줘야 합니다.
