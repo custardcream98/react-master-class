@@ -82,3 +82,47 @@ export default Circle;
 ```
 
 즉, 제너릭을 이용해서 `ContainerProps`라는 객체 타입의 prop이 넘어올것이라고 알려줘야 합니다.
+
+### React useState Hook with TypeScript
+
+```ts
+const [value, setValue] = useState(0);
+// 일반적인 react js 문법대로 하면 ts에서는 state의 type을 추론해 지정해줍니다.
+const [value, setValue] = useState<number | string>(0);
+// 이런 식으로 제너릭을 이용해 커스텀 타입을 지정해 줄 수도 있습니다.
+```
+
+### Event in TypeScript
+
+타입스크립트로 이벤트 객체를 다룰 때 handler측에 마우스를 갖다대면 어떤 타입을 사용하면 될지 힌트를 얻을 수 있습니다.
+
+```tsx
+function App() {
+  const [username, setUsername] = useState("");
+  const onChange = (event: React.FormEvent<HTMLInputElement>) => {
+    // 이런 식으로 이벤트 객체의 타입을 정해주면 됩니다.
+    // 아래의 input onChange attribute에서 마우스를 갖다 대면 힌트를 얻을 수 있어요
+    const {
+      currentTarget: { value },
+    } = event;
+    setUsername(value);
+  };
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(`hello ${username}`);
+  };
+  return (
+    <div>
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          placeholder="username"
+          value={username}
+          onChange={onChange}
+        />
+        <button>Log in</button>
+      </form>
+    </div>
+  );
+}
+```
