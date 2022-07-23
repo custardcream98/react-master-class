@@ -126,3 +126,37 @@ function App() {
   );
 }
 ```
+
+### styled-component Theme for TypeScript
+
+```tsx:styled.d.ts
+import "styled-components"
+
+declare module "styled-components" {
+    export interface DefaultTheme {
+        textColor: string;
+        bgColor: string;
+        btnColor: string;
+    }
+}
+```
+
+`styled.d.ts`에 이렇게 DefaultTheme 타입 object를 정의 후 override해서,
+
+```tsx:theme.ts
+import { DefaultTheme } from "styled-components";
+
+export const lightTheme: DefaultTheme = {
+    bgColor: "white",
+    textColor: "black",
+    btnColor: "tomato"
+}
+
+export const darkTheme: DefaultTheme = {
+    bgColor: "black",
+    textColor: "white",
+    btnColor: "teal"
+}
+```
+
+이런 식으로 theme 객체를 정의 후 `index.tsx`에서 불러와 ThemeProvieder component에 theme prop으로 넣으면, 전역 css가 적용됩니다.
