@@ -160,3 +160,27 @@ export const darkTheme: DefaultTheme = {
 ```
 
 이런 식으로 theme 객체를 정의 후 `index.tsx`에서 불러와 ThemeProvieder component에 theme prop으로 넣으면, 전역 css가 적용됩니다.
+
+### Dynamic Routing
+
+```tsx:/routes/Router.tsx
+const Router = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/:coinId" element={<Coin />} />
+        <Route path="/" element={<Coins />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+```
+
+```tsx:/routes/Coin.tsx
+const Coin = () => {
+  const { coinId } = useParams<keyof RouteParams>();
+  // 모든 param은 string이므로(react-router-dom v6 기준) 제너릭을 key만 가져와도 된다고 합니다.
+  // 다른 방법으로는 단순히 "coinId"를 꺽쇠 안에 넣기만 해도 되는겁니다.
+  return <div></div>;
+};
+```
