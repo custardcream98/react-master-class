@@ -184,3 +184,30 @@ const Coin = () => {
   return <div></div>;
 };
 ```
+
+### Styles
+
+기본적으로 적용돼있는 스타일을 모두 해제하려면 두가지 방법이 있습니다.
+
+1. [reset css 설치](https://meyerweb.com/eric/tools/css/reset/)
+2. npm package `styled-reset` 설치
+   - 굳이 패키지를 설치하지 않고 [이 코드](https://github.com/zacanger/styled-reset/blob/master/src/index.ts) 가져와도 됩니다. (이게 더 깔끔한 방법인듯)
+
+전역적인 css를 적용하고 싶다면(폰트 등) styled-components에서 제공하는 `createGlobalStyle`을 이용해 global scope에 스타일을 적용할 수 있습니다.
+
+```tsx:App.tsx
+const GlobalStyle = createGlobalStyle`
+    body {
+        color: red;
+    }
+`;
+
+function App() {
+  return (
+    <>
+      <GlobalStyle />
+      <Router />
+    </>
+  );
+}
+```
