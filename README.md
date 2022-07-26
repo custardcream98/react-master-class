@@ -335,6 +335,8 @@ v6 React Router에서는 nested route를 구현하는 방법이 두 가지 있�
 
 이 때, Routes는 상대경로도 지원하기에 `` path=`/${coinId}/price`  ``라고 적지 않아도 됩니다.
 
+> 참고로, 상대경로가 아닌 절대경로 표기 시에 굳이 `${}`를 이용하지 않아도 `:coinId`라고 적어도 알아서 잘 가져온다네요.
+
 2. 자식 route를 부모 element의 내부가 아닌 route 내부에 작성하는 방법입니다.
 
 ```tsx:Router.tsx
@@ -347,3 +349,21 @@ v6 React Router에서는 nested route를 구현하는 방법이 두 가지 있�
 그리고 이 자식 Route들이 어디에 render될 지 부모의 element 안에 원하는 위치에 `<Outlet />`을 이용해 표시해주면 됩니다.
 
 > 두 방법간의 성능상 차이는 없으나, 두 번째 방법이 보기 좋아서 저는 두 번째로 가겠습니다.
+
+### CSS Grid
+
+```css
+.LinkBox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+
+  a {
+    ...;
+  }
+}
+```
+
+한 줄에 나란히 놓일 버튼을 구현하기 위해 CSS의 Grid 레이아웃을 사용해봤습니다. 정말 간편하고 너무너무 재밌습니다. 본 과정을 완료하면 CSS Layout과 CSS의 함수들을 한 번 열심히 정리해봐야겠습니다.
+
+보통 Grid Layout은 전체적인 얼개를, Flex Layout은 세세한 디테일을 잡을 때 사용한다고 합니다. "차세대 레이아웃"이라고 불린다는데, 이게 없었던 시절에는 대체 어떻게 레이아웃을 잡은걸까요? (ㅠㅠ)

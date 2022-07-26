@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation, Outlet } from "react-router-dom";
+import { useParams, useLocation, Outlet, Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -35,7 +35,7 @@ const InfoBox = styled.div`
   margin-bottom: 10px;
 `;
 
-const InfoItems = styled.div`
+const InfoItem = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -50,10 +50,29 @@ const InfoItems = styled.div`
     font-size: 21px;
     font-weight: 500;
   }
-  /* h4 {
-    font-size: large;
-    font-weight: bolder;
-  } */
+`;
+
+const LinkBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+
+  a {
+    border-radius: 15px;
+    border-color: black;
+    border-width: 2px;
+    border-style: inset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 17px;
+    transition: color 0.15s ease-in;
+  }
+  a:hover {
+    color: white;
+    background-color: black;
+  }
 `;
 
 interface RouteParams {
@@ -157,29 +176,34 @@ const Coin = () => {
       ) : (
         <>
           <InfoBox>
-            <InfoItems>
+            <InfoItem>
               <span>순위</span>
               <span>{info?.rank}</span>
-            </InfoItems>
-            <InfoItems>
+            </InfoItem>
+            <InfoItem>
               <span>티커</span>
               <span>{info?.symbol}</span>
-            </InfoItems>
-            <InfoItems>
+            </InfoItem>
+            <InfoItem>
               <span>Proof Type</span>
               <span>{info?.proof_type}</span>
-            </InfoItems>
+            </InfoItem>
           </InfoBox>
           <InfoBox>
-            <InfoItems>
+            <InfoItem>
               <span>공급량</span>
               <span>{priceInfo?.total_supply}</span>
-            </InfoItems>
-            <InfoItems>
+            </InfoItem>
+            <InfoItem>
               <span>총 공급량</span>
               <span>{priceInfo?.max_supply}</span>
-            </InfoItems>
+            </InfoItem>
           </InfoBox>
+          <LinkBox>
+            <Link to={`/${coinId}/chart`}>차트</Link>
+            <Link to={`/${coinId}/price`}>가격</Link>
+          </LinkBox>
+
           <Outlet />
         </>
       )}
