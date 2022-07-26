@@ -211,3 +211,58 @@ function App() {
   );
 }
 ```
+
+### 자바스크립트 문법 - 함수를 선언과 동시에 실행하기
+
+```js
+useEffect(() => {
+  (async () => {
+    const res = await fetch("https://api.coinpaprika.com/v1/coins");
+    const json = await res.json();
+    setCoins(json.slice(0, 10));
+  })();
+}, []);
+```
+
+이 방법을 이용하면 위 예시처럼 async function을 선언과 동시에 실행할 수 있습니다.
+
+### API fetch & Load Data
+
+```tsx
+const Coins = () => {
+  const [coins, setCoins] = useState<CoinInterface[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("https://api.coinpaprika.com/v1/coins");
+      const json = await res.json();
+      setCoins(json.slice(0, 100));
+      setLoading(false);
+    })();
+  }, []);
+
+  const Loder = styled.span`
+    text-align: center;
+  `;
+
+  return (
+    <Container>
+      <Header>
+        <Title>코인</Title>
+      </Header>
+      {loading ? (
+        <Loder>로딩중...</Loder>
+      ) : (
+        <CoinsList>
+          {coins.map((coin) => (
+            <Coin key={coin.id}>
+              <Link to={`/${coin.id}`}>{coin.name} &rarr;</Link>
+            </Coin>
+          ))}
+        </CoinsList>
+      )}
+    </Container>
+  );
+};
+```
