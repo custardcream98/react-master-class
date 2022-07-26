@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation, Outlet, Link } from "react-router-dom";
+import {
+  useParams,
+  useLocation,
+  useMatch,
+  Outlet,
+  Link,
+} from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -56,22 +62,29 @@ const LinkBox = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 10px;
+`;
+
+const LinkItem = styled.span<{ isActive: boolean }>`
+  border-radius: 15px;
+  border-color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
+  border-width: 2px;
+  border-style: solid;
+  text-align: center;
+  font-size: 17px;
+  transition: color 0.15s ease-in;
 
   a {
-    border-radius: 15px;
-    border-color: black;
-    border-width: 2px;
-    border-style: inset;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
     padding: 10px;
-    font-size: 17px;
-    transition: color 0.15s ease-in;
   }
-  a:hover {
+
+  &:hover {
     color: white;
-    background-color: black;
+    background-color: ${(props) => props.theme.textColor};
+    border-color: transparent;
   }
 `;
 
@@ -147,6 +160,8 @@ const Coin = () => {
   const { state } = useLocation() as LocationParams;
   const [info, setInfo] = useState<InfoData | null>(null);
   const [priceInfo, setPriceInfo] = useState<PriceData | null>(null);
+  const priceMatch = useMatch("/:coinId/price");
+  const chartMatch = useMatch("/:coinId/chart");
 
   useEffect(() => {
     (async () => {
@@ -200,8 +215,12 @@ const Coin = () => {
             </InfoItem>
           </InfoBox>
           <LinkBox>
-            <Link to={`/${coinId}/chart`}>차트</Link>
-            <Link to={`/${coinId}/price`}>가격</Link>
+            <LinkItem isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>차트</Link>
+            </LinkItem>
+            <LinkItem isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>가격</Link>
+            </LinkItem>
           </LinkBox>
 
           <Outlet />
