@@ -315,3 +315,35 @@ const [info, setInfo] = useState<InfoData>({} as InfoData);
 ```ts
 const [info, setInfo] = useState<InfoData | null>(null);
 ```
+
+### Nested Routes using React-Router-Dom v6
+
+v6 React Router에서는 nested route를 구현하는 방법이 두 가지 있습니다.
+
+1. 부모 route의 path 마지막에 `/*`를 적어 명시적으로 이 route 내부에서 nested route가 render될 수 있음을 표시하고 자식 route를 부모 route의 element 내부에 작성하는 방법입니다.
+
+```tsx:Router.tsx
+<Route path="/:coinId/*" element={<Coin />} />
+// /:coinId => /:coinId/*
+```
+
+```tsx:Coin.tsx
+<Routes>
+  <Route path="price" element={<Price />} />
+</Routes>
+```
+
+이 때, Routes는 상대경로도 지원하기에 `` path=`/${coinId}/price`  ``라고 적지 않아도 됩니다.
+
+2. 자식 route를 부모 element의 내부가 아닌 route 내부에 작성하는 방법입니다.
+
+```tsx:Router.tsx
+<Route path="/:coinId" element={<Coin />} >
+  <Route path="chart" element={<Chart />} />
+  <Route path="price" element={<Price />} />
+</Route>
+```
+
+그리고 이 자식 Route들이 어디에 render될 지 부모의 element 안에 원하는 위치에 `<Outlet />`을 이용해 표시해주면 됩니다.
+
+> 두 방법간의 성능상 차이는 없으나, 두 번째 방법이 보기 좋아서 저는 두 번째로 가겠습니다.

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -24,6 +24,38 @@ const Loder = styled.span`
   text-align: center;
 `;
 
+const InfoBox = styled.div`
+  border-radius: 15px;
+  border-color: black;
+  border-width: 2px;
+  border-style: inset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const InfoItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 30px;
+  span:first-child {
+    font-size: 15px;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  span:nth-child(2) {
+    font-size: 21px;
+    font-weight: 500;
+  }
+  /* h4 {
+    font-size: large;
+    font-weight: bolder;
+  } */
+`;
+
 interface RouteParams {
   coinId: string;
 }
@@ -43,6 +75,17 @@ interface InfoData {
   is_new: boolean;
   is_active: boolean;
   type: string;
+  description: string;
+  message: string;
+  open_source: boolean;
+  started_at: string;
+  development_status: string;
+  hardware_wallet: boolean;
+  proof_type: string;
+  org_structure: string;
+  hash_algorithm: string;
+  first_data_at: string;
+  last_data_at: string;
 }
 
 interface PriceData {
@@ -94,24 +137,52 @@ const Coin = () => {
       const priceData = await (
         await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
       ).json();
-      console.log(infoData);
-      console.log(priceData);
 
       setInfo(infoData);
       setPriceInfo(priceData);
 
       setLoading(false);
     })();
-  }, []);
-
-  console.log(state);
+  }, [coinId]);
 
   return (
     <Container>
       <Header>
-        <Title>{state?.name || "로딩중..."}</Title>
+        <Title>
+          {state?.name ? state.name : loading ? "로딩중" : info?.name}
+        </Title>
       </Header>
-      {loading ? <Loder>로딩중...</Loder> : priceInfo?.quotes.USD.market_cap}
+      {loading ? (
+        <Loder>로딩중...</Loder>
+      ) : (
+        <>
+          <InfoBox>
+            <InfoItems>
+              <span>순위</span>
+              <span>{info?.rank}</span>
+            </InfoItems>
+            <InfoItems>
+              <span>티커</span>
+              <span>{info?.symbol}</span>
+            </InfoItems>
+            <InfoItems>
+              <span>Proof Type</span>
+              <span>{info?.proof_type}</span>
+            </InfoItems>
+          </InfoBox>
+          <InfoBox>
+            <InfoItems>
+              <span>공급량</span>
+              <span>{priceInfo?.total_supply}</span>
+            </InfoItems>
+            <InfoItems>
+              <span>총 공급량</span>
+              <span>{priceInfo?.max_supply}</span>
+            </InfoItems>
+          </InfoBox>
+          <Outlet />
+        </>
+      )}
     </Container>
   );
 };
