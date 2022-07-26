@@ -372,6 +372,49 @@ v6 React Router에서는 nested route를 구현하는 방법이 두 가지 있�
 [Flexbox Froggy](https://flexboxfroggy.com/#ko)
 [CSS Grid Garden](https://cssgridgarden.com/#ko)
 
-### React-Router-Dom useMatch Hook
+### React-Query
 
-현재 위치를 기준으로 지정된 경로에 대한 일치 여부 데이터 `` 를 반환합니다.
+> 제발 한국인이면 리액트 쿼리로 데이터 가져옵시다
+
+끝없는 API fetching, 매 번 컴포넌트가 mount 될 때마다 fetch돼 깜빡거리는 화면이 지긋지긋하다면 리액트 쿼리를 씁시다.
+
+React-Query는 isLoading도 주고, 데이터 캐싱도 해줘요.
+
+```ts
+const [loading, setLoading] = useState(true);
+const [info, setInfo] = useState<InfoData | null>(null);
+const [priceInfo, setPriceInfo] = useState<PriceData | null>(null);
+useEffect(() => {
+  (async () => {
+    const infoData = await (
+      await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+    ).json();
+    const priceData = await (
+      await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+    ).json();
+    setInfo(infoData);
+    setPriceInfo(priceData);
+    setLoading(false);
+  })();
+}, [coinId]);
+```
+
+이렇게 더러웠던 코드가
+
+```ts
+const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+  ["info", coinId],
+  () => fetchCoinInfo(coinId ?? "")
+);
+const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+  ["tickers", coinId],
+  () => fetchCoinTickers(coinId ?? "")
+);
+const loading = infoLoading || tickersLoading;
+```
+
+이렇게 이쁘게 바뀌는 매직... (물론 `api.ts`에 fetching function들을 따로 정의해주긴 했지만 그래도 간결 그 자체)
+
+이제 홈 <-> Coin 페이지 와리가리해도 로딩 안하고 깔끔하게 캐싱된 데이터를 보여줍니다.
+
+React Query가 이쁘게 해주는 캐싱을 시각적으로 보고싶다면 `root`를 `ReactQueryDevtools` 컴포넌트로 감싸줘봅시다! 멋진 리액트 쿼리 상태 조회용 개발도구가 보이게 됩니다.

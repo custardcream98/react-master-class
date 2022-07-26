@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createGlobalStyle } from "styled-components";
 import Router from "./routes/Router";
 
@@ -71,6 +71,7 @@ function App() {
     <>
       <GlobalStyle />
       <Router />
+      <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }

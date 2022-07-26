@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   useParams,
   useLocation,
@@ -7,6 +8,7 @@ import {
   Link,
 } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -16,13 +18,24 @@ const Container = styled.div`
 
 const Header = styled.header`
   height: 10vh;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-content: center;
   align-items: center;
+
+  a {
+    font-size: 15px;
+    color: ${(props) => props.theme.textColor};
+    transition: color 0.1s ease-in;
+  }
+  a:hover {
+    color: ${(props) => props.theme.accentColor};
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 48px;
+  font-size: 30px;
+  text-align: center;
   color: ${(props) => props.theme.accentColor};
 `;
 
@@ -156,35 +169,28 @@ interface PriceData {
 
 const Coin = () => {
   const { coinId } = useParams<keyof RouteParams>();
-  const [loading, setLoading] = useState(true);
   const { state } = useLocation() as LocationParams;
-  const [info, setInfo] = useState<InfoData | null>(null);
-  const [priceInfo, setPriceInfo] = useState<PriceData | null>(null);
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId ?? "")
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId ?? "")
+  );
 
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-
-      setInfo(infoData);
-      setPriceInfo(priceData);
-
-      setLoading(false);
-    })();
-  }, [coinId]);
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
       <Header>
+        <Link to="/">홈으로</Link>
         <Title>
-          {state?.name ? state.name : loading ? "로딩중" : info?.name}
+          {state?.name ? state.name : loading ? "로딩중" : infoData?.name}
         </Title>
+        <div></div>
       </Header>
       {loading ? (
         <Loder>로딩중...</Loder>
@@ -193,25 +199,25 @@ const Coin = () => {
           <InfoBox>
             <InfoItem>
               <span>순위</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </InfoItem>
             <InfoItem>
               <span>티커</span>
-              <span>{info?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </InfoItem>
             <InfoItem>
               <span>Proof Type</span>
-              <span>{info?.proof_type}</span>
+              <span>{infoData?.proof_type}</span>
             </InfoItem>
           </InfoBox>
           <InfoBox>
             <InfoItem>
               <span>공급량</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </InfoItem>
             <InfoItem>
               <span>총 공급량</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </InfoItem>
           </InfoBox>
           <LinkBox>
