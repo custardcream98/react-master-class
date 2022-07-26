@@ -266,3 +266,52 @@ const Coins = () => {
   );
 };
 ```
+
+### TypeScript interface 명명법
+
+타입스크립트에서는 interface를 이름 지을 때 대문자 I 를 변수명 앞에 붙입니다. 그게 더 보기 좋대요
+
+### 놀라운 VSC의 단축키 세계
+
+개발자가 개발하는 개발툴... 개발자들은 역시 귀찮은걸 정말 싫어하나 봅니다. 거의 모든 상황에 대한 단축키가 있는 것 같던데 새로 배울 때 마다 이걸 모르고 살았던 과거가 너무 불쌍해요.
+
+오늘 배운 개꾸르팁 단축키
+
+```
+cmd + d : 특정 문자(열)을 선택한 상태에서 단축키를 연타하면 똑같은 문자열을 계속해서 추가로 선택해줘요.
+
+alt + shift + I : 여러 줄을 선택한 상태에서 단축키를 누르면 각각의 줄의 맨 마지막에 멀티 커서를 놔줘요. (이거 진짜 미친 개꿀팁)
+
+cmd + shift + -> : 현재 커서부터 줄 끝까지 모두 선택해줘요. 멀티 커서와 합하면 아주 강력한 기능!!
+```
+
+### Type Assertion
+
+```ts
+interface InfoData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  is_new: boolean;
+  is_active: boolean;
+  type: string;
+}
+const [info, setInfo] = useState<InfoData>({});
+```
+
+이 경우, info state를 empty object로 initiate하고 싶었으나, `Argument of type '{}' is not assignable to parameter of type 'PriceData | (() => PriceData)'.` 라는 오류가 뜹니다. 이는 타입스크립트의 규칙과 목적에 의하면 당연한 상황입니다.
+
+그러나, 개발의 용이성을 위해 강제적으로 형식에 맞지 않는 데이터여도 형식에 맞는 '척'을 하게 만들수 있습니다.
+
+```ts
+const [info, setInfo] = useState<InfoData>({} as InfoData);
+```
+
+이를 `type assertion(타입 표명)`이라고 하는데, 타입스크립트의 원래 목적에는 배반되는 행동이므로 매우 주의해야 합니다. 개발자가 컴파일러에게 '걱정하지 말고 나만 믿어' 하는 꼴인데, 개발자의 실수로 컴파일러와 약속한 속성을 추가하지 않는 경우를 막아주지 못하기 때문입니다.
+
+저는 저를 믿지 않고 컴퓨터를 믿는 훌륭한 개발자이므로 위의 type assertion보다는 아래의 방법으로 첫 state를 부여했습니다.
+
+```ts
+const [info, setInfo] = useState<InfoData | null>(null);
+```
