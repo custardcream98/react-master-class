@@ -2,6 +2,23 @@
 
 React Master Class 공부 및 정리
 
+---
+
+## 실습 결과물
+
+### 1. 코인 차트
+
+`styled-components` `react-query` `react-router-dom` `typescript` `react-apexcharts`
+
+> 간단하게 코인의 정보를 불러오고, 과거 가격 정보로 코인 가격을 보여주는 차트를 띄웁니다.
+
+<p align="center">
+<img src="./Coin%20Chart%20Project/Coin%20Chart.gif" width="300px" /></p>
+
+### 2. ToDo App (개발중)
+
+---
+
 ### styled-component
 
 ```
