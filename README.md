@@ -349,6 +349,7 @@ v6 React Router에서는 nested route를 구현하는 방법이 두 가지 있�
 그리고 이 자식 Route들이 어디에 render될 지 부모의 element 안에 원하는 위치에 `<Outlet />`을 이용해 표시해주면 됩니다.
 
 > 두 방법간의 성능상 차이는 없으나, 두 번째 방법이 보기 좋아서 저는 두 번째로 가겠습니다.
+> Outlet 이용 시 자식 컴포넌트에게 prop을 전해주고 싶다면 [useOutletContext Hook](https://reactrouter.com/docs/en/v6/hooks/use-outlet-context)을 사용하면 됩니다. 자세한 예시는 [여기를 참고해주세요.](#useoutletcontext-hook을-이용해-자식-컴포넌트에게-context-전달하기)
 
 ### CSS Grid
 
@@ -418,3 +419,28 @@ const loading = infoLoading || tickersLoading;
 이제 홈 <-> Coin 페이지 와리가리해도 로딩 안하고 깔끔하게 캐싱된 데이터를 보여줍니다.
 
 React Query가 이쁘게 해주는 캐싱을 시각적으로 보고싶다면 `root`를 `ReactQueryDevtools` 컴포넌트로 감싸줘봅시다! 멋진 리액트 쿼리 상태 조회용 개발도구가 보이게 됩니다.
+
+### useOutletContext Hook을 이용해 자식 컴포넌트에게 context 전달하기
+
+**`Coin.tsx`**
+
+```tsx
+<Outlet context={{ coinId }} />
+```
+
+```tsx
+interface IChartProps {
+  coinId: string;
+}
+export const useCoinId = () => useOutletContext<IChartProps>();
+```
+
+타입스크립트를 이용할 경우, 공식 문서에서는 이렇게 부모쪽에서 부모의 context에 접근할 수 있도록 도와주는 커스텀 Hook을 선언할것을 권고하고 있습니다. 이를 통해 consumer(자식)측에서는 typing이 가능하고, 부모 측에서는 consumer를 control할 수 있게 된다는 장점이 있습니다.
+
+자식 측에서는 간단하게 위의 Hook을 불러와 사용하면 됩니다.
+
+**`Chart.tsx`**
+
+```tsx
+const { coinId } = useCoinId();
+```

@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   useParams,
   useLocation,
   useMatch,
   Outlet,
+  useOutletContext,
   Link,
 } from "react-router-dom";
 import styled from "styled-components";
@@ -167,6 +167,10 @@ interface PriceData {
   };
 }
 
+interface IChartProps {
+  coinId: string;
+}
+
 const Coin = () => {
   const { coinId } = useParams<keyof RouteParams>();
   const { state } = useLocation() as LocationParams;
@@ -229,7 +233,7 @@ const Coin = () => {
             </LinkItem>
           </LinkBox>
 
-          <Outlet />
+          <Outlet context={{ coinId }} />
         </>
       )}
     </Container>
@@ -237,3 +241,5 @@ const Coin = () => {
 };
 
 export default Coin;
+
+export const useCoinId = () => useOutletContext<IChartProps>();
