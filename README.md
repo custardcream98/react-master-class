@@ -461,3 +461,82 @@ export const useCoinId = () => useOutletContext<IChartProps>();
 ```tsx
 const { coinId } = useCoinId();
 ```
+
+### Framer Motion의 강려크한 Animation
+
+```tsx
+import styled from "styled-components";
+import { motion } from "framer-motion";
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+`;
+
+const Box = styled(motion.div)`
+  background-color: rgba(242, 86, 86, 0.826);
+  width: 100px;
+  height: 100px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-radius: 35px;
+  padding: 7px;
+`;
+
+const Circle = styled(motion.div)`
+  background-color: white;
+  place-self: center;
+  height: 35px;
+  width: 35px;
+  border-radius: 18px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.1);
+`;
+
+const boxVariants = {
+  start: {
+    opacity: 0,
+    scale: 0.5,
+  },
+  end: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: "spring",
+      duration: 0.5,
+      bounce: 0.5,
+      delayChildren: 0.2,
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const circleVariants = {
+  start: {
+    opacity: 0,
+    y: 10,
+  },
+  end: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
+const Home = () => {
+  return (
+    <Wrapper>
+      <Box variants={boxVariants} initial="start" animate="end">
+        <Circle variants={circleVariants} />
+        <Circle variants={circleVariants} />
+        <Circle variants={circleVariants} />
+        <Circle variants={circleVariants} />
+      </Box>
+    </Wrapper>
+  );
+};
+
+export default Home;
+```
